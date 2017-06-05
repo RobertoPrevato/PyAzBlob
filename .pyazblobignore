@@ -1,0 +1,33 @@
+# Windows debris
+[T|t]humbs.db
+
+## Ignore Linux files ending with ~
+*~
+
+# CPython debris
+__pycache__
+*.pyc
+*.pyo
+
+# CPython virtual environments
+**/env/*
+
+# NodeJs stuff
+node_modules
+
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# node-waf configuration
+.lock-wscript
+
+# IDE stuff
+.idea
+.vs
+.vscode
+
+# sh files
+*.sh.swm
+*.sh.swn
+*.sh.swo
+*.sh.swp
