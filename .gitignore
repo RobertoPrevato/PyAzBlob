@@ -102,3 +102,6 @@ ENV/
 
 .idea
 .vscode
+
+# avoids committing accidentally storage keys
+settings.ini

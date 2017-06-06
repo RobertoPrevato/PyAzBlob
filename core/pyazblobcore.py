@@ -9,6 +9,8 @@
  * http://www.opensource.org/licenses/MIT
 """
 import re
+import os
+import errno
 import fnmatch
 import mimetypes
 import time
@@ -50,6 +52,18 @@ if not container_name:
     raise ConfigurationError("missing Storage Account destination container name configuration")
 
 
+def first_leaf(a):
+    return a[:a.index("/")] if "/" in a else a
+
+
+# support for subfolders
+if "/" in container_name:
+    paths_prefix = container_name[container_name.index("/")+1:]
+    container_name = first_leaf(container_name)
+else:
+    paths_prefix = ""
+
+
 def read_lines_strip_comments(p):
     lines = [re.sub("#.+$", "", x) for x in Scribe.read_lines(p)]
     return [l for l in lines if l]
@@ -71,7 +85,15 @@ def pyazupload_file(file_path, blob_name, block_blob_service):
 
     print("[*] Uploading {} ({})".format(file_path, file_mime))
 
-    blob_name = blob_name.replace("\\\\", "\\").replace("//", "/")
+    # avoid "<no-name>"" folders:
+    while "//" in blob_name:
+        blob_name = blob_name.replace("//", "/")
+
+    while "\\\\" in blob_name:
+        blob_name = blob_name.replace("\\\\", "\\")
+
+    while blob_name.startswith("\\"):
+        blob_name = blob_name[1:]
 
     block_blob_service.create_blob_from_path(
         container_name,
@@ -81,7 +103,18 @@ def pyazupload_file(file_path, blob_name, block_blob_service):
         )
 
 
-files_log = "-".join([account_name, container_name, "files.log"])
+def ensure_folder(path):
+    try:
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
+
+
+ensure_folder("logs")
+
+
+files_log = os.path.join("logs", "-".join([account_name, container_name.replace("\\", "_").replace("/", "_"), "files.log"]))
 
 
 def pyazupload(root_path,
@@ -103,7 +136,7 @@ def pyazupload(root_path,
     """
     if not ignored:
         ignored = []
-
+       
     if force:
         files_uploaded_previously = []
         Scribe.write("", files_log)
@@ -121,7 +154,7 @@ def pyazupload(root_path,
             # create container (if it already exists, nothing bad happens)
             block_blob_service.create_container(container_name)
         except Exception as ex:
-            raise RuntimeError("[*] Cannot obtain instance of BlockBlobService. Error details: {}".format(ex))
+            raise RuntimeError("Cannot obtain instance of BlockBlobService. Error details: {}".format(ex))
 
     if not root_path:
         raise ArgumentNullException("root_path")
@@ -173,7 +206,8 @@ def pyazupload(root_path,
                 continue
 
         try:
-            blob_name = item_path[len(cut_path):]
+            blob_name = paths_prefix + item_path[len(cut_path):]
+          
             pyazupload_file(item_path, blob_name, block_blob_service)
         except Exception as ex:
             print("[*] Error while uploading file: " + item_path + " - " + str(ex))
