@@ -25,11 +25,13 @@ Python tool to upload files into Azure Storage Blob Service. Comfortably transfe
 * uses official [Microsoft Azure Storage SDK for Python](https://github.com/Azure/azure-storage-python), which automatically handles chunked upload of files greater than 64MB
 
 ## Note about lack of parallelism
-This console application is **intentionally** made to upload files one by one, synchronously. This decision is not due to lack of technical knowledge, but consciuosly taken to limit number of web requests to Azure Storage service and the consumption of upload bandwidth. Most private users don't have great upload speed from their IP, anyway.
+This console application is **intentionally** designed to upload files one by one, synchronously. This decision is not due to lack of technical knowledge: it's taken to limit the number of web requests to Azure Storage service and the consumption of upload bandwidth from client's side. Most private users don't have great upload speed from their internet providers, anyway. This application is primarily intended for operations that happen _una tantum_, like transferring files from local file system to Azure Blob Storage, to save space on hard drives or having backups.
 
 ## Use cases
 * save space in other locations, transferring files to Azure Cloud 
 * creation of backups in Azure Cloud
+* you have an MSDN subscription from work, free credit to spend on Azure Cloud, and a backup to do
+* saving money, storing files in Azure Storage (it is [*really* convenient](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/), in my opinion)
 
 ## Requirements
 * Python 3.4 =>
@@ -72,6 +74,12 @@ env\Scripts\activate.bat
 ### 4. Configure the Azure Storage
 
 Configure Azure Storage account name and key in file `settings.ini`, which is read by Python console application when running the script. Key and name are used only by official [Microsoft Azure Storage SDK for Python](https://github.com/Azure/azure-storage-python), as can be verified in source code.
+
+**Recommendations**: if you are creating an Azure Storage for backups, use _Standard_ performance and [_LRS_ (Locally Redundant Storage)](https://docs.microsoft.com/en-us/azure/storage/storage-redundancy#locally-redundant-storage). Make sure to use *Private* containers if you want your data to be kept private.
+
+#### 4.1 Useful links
+* [Create a Storage Account](https://docs.microsoft.com/en-us/azure/storage/storage-create-storage-account)
+* [Blob Storage Account pricing](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/)
 
 Storage account name and settings can be found in the Azure Portal under `Settings > Access keys`.
 
