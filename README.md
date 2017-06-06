@@ -1,5 +1,8 @@
 # PyAzBlob
-Python tool to upload files into Azure Storage Blob Service. Comfortably transfers files from local file system into Azure Storage, by account name and key.
+Python tool to upload files into Azure Storage Blob Service from local file system.
+
+## Disclaimer
+[AzCopy](https://docs.microsoft.com/en-us/azure/storage/storage-use-azcopy) is the official tool from Microsoft that, among many other things, implements bulk upload of files from local file system to Azure Storage Blob Service. PyAzBlob is a simple console application created in few hours, mostly for fun and to practice with [Microsoft Azure Storage SDK for Python](https://github.com/Azure/azure-storage-python). However, it does implement a couple of features that I find useful for my personal use, that are not available in AzCopy.
 
 ```
   _____                     ____  _       _                
@@ -10,28 +13,18 @@ Python tool to upload files into Azure Storage Blob Service. Comfortably transfe
  |_|    \__, /_/    \_\/___|____/|_|\___/|_.__/            
          __/ |                                             
         |___/                                              
-                                                           
-  PyAzBlob | Azure Blob Service Bulk Uploader.             
-  Written by Roberto Prevato <roberto.prevato@gmail.com>   
 ```
 
 ## Features
 * user friendly console application with integrated help
 * recursive upload of files, keeping the same folder structure of local file system
-* supports any kind of file type that can be uploaded to Azure Storage
 * definition of ignored files by Unix-style glob patterns
-* stores uploaded files, to skip re-uploading same files to same Azure Storage container
+* logs uploaded files one by one, to skip re-uploading same files to same Azure Storage container in following runs
 * supports definition of Azure Storage keys inside environmental variables or in .ini file
 * uses official [Microsoft Azure Storage SDK for Python](https://github.com/Azure/azure-storage-python), which automatically handles chunked upload of files greater than 64MB
 
 ## Note about lack of parallelism
-This console application is **intentionally** designed to upload files one by one, synchronously. This decision is not due to lack of technical knowledge: it's taken to limit the number of web requests to Azure Storage service and the consumption of upload bandwidth from client's side. Most private users don't have great upload speed from their internet providers, anyway. This application is primarily intended for operations that happen _una tantum_, like transferring files from local file system to Azure Blob Storage, to save space on hard drives or having backups.
-
-## Use cases
-* save space in other locations, transferring files to Azure Cloud 
-* creation of backups in Azure Cloud
-* you have an MSDN subscription from work, free credit to spend on Azure Cloud, and a backup to do
-* saving money, storing files in Azure Storage (it is [*really* convenient](https://azure.microsoft.com/en-us/pricing/details/storage/blobs/), in my opinion)
+This console application is **intentionally** made to upload files one by one, synchronously. This decision is not due to lack of technical knowledge: it's taken to limit the number of web requests to Azure Storage service and the consumption of upload bandwidth from client's side. Most private users don't have great upload speed from their internet providers, anyway. This application is primarily intended for operations that happen _una tantum_, like transferring files from local file system to Azure Blob Storage, to save space on hard drives or having backups.
 
 ## Requirements
 * Python 3.4 =>

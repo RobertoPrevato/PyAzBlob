@@ -138,7 +138,9 @@ def pyazupload(root_path,
     if cut_path:
         if not root_path.startswith(cut_path):
             raise InvalidArgument("root_path must start with given cut_path")
-
+    else:
+        cut_path = root_path
+    
     # read ignored files
     ignored_paths = load_ignored() + ignored
 
