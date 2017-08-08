@@ -21,10 +21,17 @@ Python tool to upload files into Azure Storage Blob Service from local file syst
 * definition of ignored files by Unix-style glob patterns
 * logs uploaded files one by one, to skip re-uploading same files to same Azure Storage container in following runs
 * supports definition of Azure Storage keys inside environmental variables or in .ini file
-* uses official [Microsoft Azure Storage SDK for Python](https://github.com/Azure/azure-storage-python), which automatically handles chunked upload of files greater than 64MB
+* two implementations: event-based (asynchronous) implementation and synchronous implementation, described below under _Branches_
 
-## Note about lack of parallelism
-This console application is **intentionally** made to upload files one by one, synchronously. This decision is not due to lack of technical knowledge: it's taken to limit the number of web requests to Azure Storage service and the consumption of upload bandwidth from client's side. Most private users don't have great upload speed from their internet providers, anyway. This application is primarily intended for operations that happen _una tantum_, like transferring files from local file system to Azure Blob Storage, to save space on hard drives or having backups.
+## Branches
+This repository has two branches, with two implementations of the application:
+* [**async** branch](https://github.com/RobertoPrevato/PyAzBlob/tree/async), with event-based, asynchronous version that only supports files smaller than 64MB, using aiohttp framework
+* [**master** branch](https://github.com/RobertoPrevato/PyAzBlob) with synchronous version, using the official [Microsoft Azure Storage SDK for Python](https://github.com/Azure/azure-storage-python), which automatically handles chunked upload of files greater than 64MB
+
+The asynchronous version offers best performance, especially for small files in big number. The two implementations have smaller differences: the async version requires a [_Shared Access Signature (SAS)_](https://docs.microsoft.com/en-us/azure/storage/storage-dotnet-shared-access-signature-part-1) from a storage account, whereas the sync version requires _storage account name and an administrative key_.
+
+## This branch
+This branch (**master**) contains the synchronous implementation, using the official [Microsoft Azure Storage SDK for Python](https://github.com/Azure/azure-storage-python), which automatically handles chunked upload of files greater than 64MB.
 
 ## Requirements
 * Python 3.4 =>
