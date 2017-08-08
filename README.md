@@ -30,6 +30,8 @@ This repository has two branches, with two implementations of the application:
 
 The async version requires a [_Shared Access Signature (SAS)_](https://docs.microsoft.com/en-us/azure/storage/storage-dotnet-shared-access-signature-part-1) from a storage account, whereas the sync version requires _storage account name and an administrative key_.
 
+The asynchronous version offers best performance, especially for small files in big number. Performance tests showed the asynchronous version to be about 7 times faster than the synchronous implementation; using a single thread in both cases.
+
 ## This branch
 This branch (**master**) contains the synchronous implementation, using the official [Microsoft Azure Storage SDK for Python](https://github.com/Azure/azure-storage-python), which automatically handles chunked upload of files greater than 64MB.
 
