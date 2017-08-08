@@ -76,14 +76,14 @@ if __name__ == "__main__":
     if not options.nobanner:
         print(banner)
     try:
-        from core.pyazblobcore import pyazupload
+        from core.pyazblobcore import pyazupload_entry
 
-        pyazupload(options.root_path,
-                   options.cut_path,
-                   options.ignoredpath,
-                   options.recurse,
-                   options.force,
-                   options.sleep)
+        pyazupload_entry(options.root_path,
+                         options.cut_path,
+                         options.ignoredpath,
+                         options.recurse,
+                         options.force,
+                         options.sleep)
 
     except MissingDependency as mde:
         sep_print(str(mde))

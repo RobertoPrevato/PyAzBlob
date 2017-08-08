@@ -15,11 +15,12 @@ import fnmatch
 import mimetypes
 import time
 from pathlib import Path
+from core.diagnostics import StopWatch
 from core.configuration import config
 from core.literature import Scribe
 from core.exceptions import ArgumentNullException, InvalidArgument, MissingDependency, ConfigurationError
 
-__all__ = ["pyazupload"]
+__all__ = ["pyazupload", "pyazupload_entry"]
 
 # I am a kind person..
 try:
@@ -117,6 +118,26 @@ ensure_folder("logs")
 files_log = os.path.join("logs", "-".join([account_name, container_name.replace("\\", "_").replace("/", "_"), "files.log"]))
 
 
+def pyazupload_entry(root_path,
+                     cut_path=None,
+                     ignored=None,
+                     recurse=False,
+                     force=False,
+                     sleep=None,
+                     block_blob_service=None):
+
+    with StopWatch() as sw:
+        pyazupload(root_path,
+                   cut_path,
+                   ignored,
+                   recurse,
+                   force,
+                   sleep,
+                   block_blob_service)
+
+        print("[*] Elapsed: {0:.2f}s".format(sw.elapsed_s))
+
+
 def pyazupload(root_path,
                cut_path=None,
                ignored=None,
@@ -182,6 +203,9 @@ def pyazupload(root_path,
     for item in items:
         item_path = str(item)
 
+        if os.path.islink(item_path):
+            continue
+
         if item_path in files_uploaded_previously:
             print("[*] Skipping... " + item_path)
             continue
@@ -200,7 +224,7 @@ def pyazupload(root_path,
                            cut_path,
                            ignored,
                            recurse,
-                           False,
+                           force,
                            sleep,
                            block_blob_service)
                 continue
