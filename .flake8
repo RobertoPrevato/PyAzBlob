@@ -1,0 +1,6 @@
+[flake8]
+exclude = __pycache__,built,build,venv
+ignore = E203, E266, W503
+max-complexity = 18
+max-line-length = 90
+select = C,E,F,W,B,B950
