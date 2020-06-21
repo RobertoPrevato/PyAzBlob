@@ -27,12 +27,13 @@ setup(
     author_email="roberto.prevato@gmail.com",
     keywords="azure storage python bulk upload blob service",
     license="MIT",
-    packages=["pyazblob"],
+    packages=["pyazblob", "pyazblob.commands"],
     entry_points={"console_scripts": ["pyazblob=pyazblob.main:main"]},
     install_requires=[
         "click==7.1.2",
         "essentials==1.1.3",
         "azure-storage-blob==12.3.2",
+        "azure-common==1.1.25",
     ],
     include_package_data=True,
 )

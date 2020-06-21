@@ -13,6 +13,9 @@ class Settings:
     def from_settings_file(cls, file_name: str = "settings.json") -> "Settings":
         file_path = Path(Path.cwd() / file_name)
 
+        if not file_path.is_file():
+            return Settings({})
+
         with open(str(file_path), mode="rt", encoding="utf8") as file:
             data = loads(file.read())
 
