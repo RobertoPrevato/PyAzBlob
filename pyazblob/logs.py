@@ -1,8 +1,9 @@
 import logging
 import logging.handlers
+import sys
 from datetime import datetime
-from essentials.folders import ensure_folder
 
+from essentials.folders import ensure_folder
 
 logger = None
 
@@ -31,6 +32,6 @@ def get_app_logger():
     file_handler.setLevel(logging.DEBUG)
 
     logger.addHandler(file_handler)
-    logger.addHandler(logging.StreamHandler())
+    logger.addHandler(logging.StreamHandler(sys.stdout))
 
     return logger
