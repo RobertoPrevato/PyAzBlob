@@ -85,7 +85,6 @@ def remove_empty_folders(blob_name: str) -> str:
 
 def upload_file(
     file_path: Path,
-    container_name: str,
     blob_name: str,
     service: ContainerClient,
     settings: Settings,
@@ -141,7 +140,9 @@ def load_ignored() -> List[str]:
 
 
 def get_paths(
-    root_path: Path, recurse: bool, ignored_paths: List[str],
+    root_path: Path,
+    recurse: bool,
+    ignored_paths: List[str],
 ) -> Iterable[Path]:
     validate_root_path(root_path)
 
@@ -157,7 +158,9 @@ def get_paths(
             else:
                 # upload children files
                 yield from get_paths(
-                    child, recurse, ignored_paths,
+                    child,
+                    recurse,
+                    ignored_paths,
                 )
                 continue
 
@@ -184,14 +187,13 @@ def get_all(
 
 def upload_from_path(
     file_path: Path,
-    container_name: str,
     blob_name: str,
     service: ContainerClient,
     settings: Settings,
     force: bool,
 ) -> UploadedFile:
     try:
-        upload_file(file_path, container_name, blob_name, service, settings, force)
+        upload_file(file_path, blob_name, service, settings, force)
 
         return UploadedFile(file_path, blob_name, True)
     except Exception as error:
@@ -203,7 +205,6 @@ def upload_from_path(
 
 def upload_parallel(
     root_path: Path,
-    container_name: str,
     paths_prefix: str,
     cut_path: str,
     recurse: bool,
@@ -214,7 +215,7 @@ def upload_parallel(
     concurrency: int,
 ):
     args_generator = (
-        (file_path, container_name, blob_name, service, settings, force)
+        (file_path, blob_name, service, settings, force)
         for file_path, blob_name in get_all(
             root_path, paths_prefix, cut_path, recurse, ignored_paths
         )
@@ -365,7 +366,6 @@ def upload_command(
         with StopWatch() as sw:
             for item in upload_parallel(
                 Path(path),
-                container_name,
                 paths_prefix,
                 cut_path,
                 recurse,

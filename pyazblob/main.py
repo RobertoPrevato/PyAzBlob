@@ -1,10 +1,11 @@
-import sys
-import click
 import logging
+import sys
+
+import click
+
 from . import version
 from .commands.upload import upload_command
 from .logs import get_app_logger
-
 
 sys.path.append(".")
 
