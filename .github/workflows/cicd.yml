@@ -69,18 +69,18 @@ jobs:
 
       - name: Install distribution dependencies
         run: pip install --upgrade twine setuptools wheel
-        if: matrix.python-version == "3.10"
+        if: matrix.python-version == '3.10'
 
       - name: Create distribution package
         run: python setup.py sdist bdist_wheel
-        if: matrix.python-version == "3.10"
+        if: matrix.python-version == '3.10'
 
       - name: Upload distribution package
         uses: actions/upload-artifact@master
         with:
           name: dist-package-${{ matrix.python-version }}
           path: dist
-        if: matrix.python-version == "3.10"
+        if: matrix.python-version == '3.10'
 
   publish:
     runs-on: ubuntu-22.04
