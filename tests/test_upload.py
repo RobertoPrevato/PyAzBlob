@@ -1,4 +1,5 @@
 import os
+
 from pyazblob.commands.upload import get_env_variable_or_throw
 
 
