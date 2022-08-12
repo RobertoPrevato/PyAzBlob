@@ -19,7 +19,6 @@ Python tool to upload files into Azure Storage Blob Service from local file syst
 * user friendly console application with integrated help
 * recursive upload of files, keeping the same folder structure of local file system
 * definition of ignored files by Unix-style glob patterns, in `.pyazblobignore` file (read from command CWD)
-* logs uploaded files one by one, to skip re-uploading same files to same Azure Storage container in following runs (unless their last modified time changed)
 * supports definition of Azure Storage keys inside environmental variables or in .ini file
 * supports specifying mime types by file extension in `settings.json` file (read from command CWD)
 
