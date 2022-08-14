@@ -173,13 +173,17 @@ def get_paths(
         yield child
 
 
-def get_all(
+def get_all_paths(
     root_path: Path,
     paths_prefix: str,
     cut_path: str,
     recurse: bool,
     ignored_paths: List[str],
 ) -> Iterable[Tuple[Path, str]]:
+    """
+    Returns tuples containing the original file name (relative path) and the
+    corresponding blob name for the destination account.
+    """
     for file_path in get_paths(root_path, recurse, ignored_paths):
         blob_name = paths_prefix + str(file_path)[len(cut_path) :]
         yield file_path, blob_name
@@ -216,7 +220,7 @@ def upload_parallel(
 ):
     args_generator = (
         (file_path, blob_name, service, settings, force)
-        for file_path, blob_name in get_all(
+        for file_path, blob_name in get_all_paths(
             root_path, paths_prefix, cut_path, recurse, ignored_paths
         )
     )
@@ -322,6 +326,9 @@ def upload_command(
     Bulk uploads files found under the given directory, to an
     Azure Storage Blob Service with the given name.
     """
+
+    if path.startswith("./"):
+        path = path[2:]
 
     if cut_path:
         if not path.startswith(cut_path):
